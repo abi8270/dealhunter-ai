@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>DealHunter AI</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #080b14;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        /* NAVBAR */
+        nav {
+            width: 100%;
+            padding: 22px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #1d2230;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .logo span {
+            color: #7c5cff;
+        }
+
+        .badge {
+            background: #151a29;
+            border: 1px solid #30374b;
+            padding: 9px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+            color: #bfc6d8;
+        }
+
+        /* HERO */
+        .hero {
+            text-align: center;
+            padding: 75px 20px 45px;
+        }
+
+        .hero h1 {
+            font-size: clamp(40px, 7vw, 72px);
+            line-height: 1.05;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 span {
+            color: #8c6cff;
+        }
+
+        .hero p {
+            max-width: 700px;
+            margin: auto;
+            color: #aeb5c7;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        /* SEARCH BOX */
+        .search-section {
+            max-width: 850px;
+            margin: 20px auto 60px;
+            padding: 0 20px;
+        }
+
+        .search-box {
+            background: #101521;
+            border: 1px solid #282f40;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+        }
+
+        .input-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #cbd2e3;
+            font-size: 14px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #30384d;
+            background: #080c15;
+            color: white;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #8064ff;
+        }
+
+        .search-button {
+            width: 100%;
+            padding: 17px;
+            border: none;
+            border-radius: 11px;
+            background: #7657ff;
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .search-button:hover {
+            transform: translateY(-2px);
+            background: #896eff;
+        }
+
+        .search-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* AGENT STATUS */
+        #status {
+            display: none;
+            max-width: 850px;
+            margin: 0 auto 45px;
+            padding: 0 20px;
+        }
+
+        .status-box {
+            background: #101521;
+            border: 1px solid #282f40;
+            border-radius: 16px;
+            padding: 22px;
+        }
+
+        .status-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 18px;
+        }
+
+        .status-step {
+            padding: 12px 15px;
+            margin: 8px 0;
+            border-radius: 9px;
+            background: #171d2b;
+            color: #9da6bb;
+        }
+
+        .status-step.active {
+            color: #ffffff;
+            border-left: 3px solid #8064ff;
+        }
+
+        .status-step.completed {
+            color: #72e6a8;
+            border-left: 3px solid #45d58c;
+        }
+
+        .status-step.error {
+            color: #ff7d7d;
+            border-left: 3px solid #ff5252;
+        }
+
+        /* RESULTS */
+        #results {
+            display: none;
+            max-width: 1100px;
+            margin: 0 auto 80px;
+            padding: 0 20px;
+        }
+
+        .results-heading {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .results-heading h2 {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .results-heading p {
+            color: #8e97aa;
+        }
+
+        /* BEST DEAL */
+        .best-deal {
+            background: linear-gradient(
+                135deg,
+                #17152c,
+                #101521
+            );
+            border: 1px solid #7159ff;
+            border-radius: 18px;
+            padding: 28px;
+            margin-bottom: 35px;
+            box-shadow: 0 0 35px rgba(113,89,255,0.12);
+        }
+
+        .best-badge {
+            display: inline-block;
+            background: #7657ff;
+            padding: 7px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 18px;
+        }
+
+        .best-deal h2 {
+            font-size: 24px;
+            margin-bottom: 13px;
+        }
+
+        .best-deal p {
+            color: #adb5c8;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .deal-button {
+            display: inline-block;
+            text-decoration: none;
+            padding: 11px 17px;
+            background: #7657ff;
+            color: white;
+            border-radius: 9px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .deal-button:hover {
+            background: #8b73ff;
+        }
+
+        /* PRODUCT GRID */
+        .results-title {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .product-card {
+            background: #101521;
+            border: 1px solid #282f40;
+            border-radius: 15px;
+            padding: 22px;
+            transition: 0.2s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            border-color: #6550d9;
+        }
+
+        .rank {
+            color: #8d76ff;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        .product-card h3 {
+            font-size: 18px;
+            line-height: 1.4;
+            margin-bottom: 12px;
+        }
+
+        .snippet {
+            color: #9fa8ba;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 18px;
+        }
+
+        .source {
+            color: #727c91;
+            font-size: 13px;
+            margin-bottom: 18px;
+        }
+
+        /* NO RESULTS */
+        .no-results {
+            text-align: center;
+            background: #101521;
+            border: 1px solid #282f40;
+            border-radius: 15px;
+            padding: 40px;
+        }
+
+        .no-results p {
+            color: #9fa8ba;
+            margin-top: 10px;
+        }
+
+        /* FOOTER */
+        footer {
+            text-align: center;
+            padding: 30px;
+            border-top: 1px solid #1d2230;
+            color: #687287;
+            font-size: 13px;
+        }
+
+        /* MOBILE */
+        @media (max-width: 800px) {
+
+            nav {
+                padding: 18px 5%;
+            }
+
+            .badge {
+                display: none;
+            }
+
+            .hero {
+                padding-top: 50px;
+            }
+
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav>
+
+        <div class="logo">
+            🔍 Deal<span>Hunter</span> AI
+        </div>
+
+        <div class="badge">
+            🤖 Autonomous Shopping Agent
+        </div>
+
+    </nav>
+
+
+    <!-- HERO -->
+    <section class="hero">
+
+        <h1>
+            Find the <span>Best Deal</span><br>
+            Without the Searching
+        </h1>
+
+        <p>
+            DealHunter AI searches the web, reads product information,
+            compares prices and features, and helps you find the best option.
+        </p>
+
+    </section>
+
+
+    <!-- SEARCH -->
+    <section class="search-section">
+
+        <div class="search-box">
+
+            <div class="input-group">
+
+                <label for="product">
+                    🔎 What are you looking for?
+                </label>
+
+                <input
+                    type="text"
+                    id="product"
+                    placeholder="Example: Best 5G mobile under ₹15000"
+                >
+
+            </div>
+
+
+            <div class="input-group">
+
+                <label for="budget">
+                    💰 Maximum Budget (₹)
+                </label>
+
+                <input
+                    type="number"
+                    id="budget"
+                    placeholder="Example: 15000"
+                >
+
+            </div>
+
+
+            <div class="input-group">
+
+                <label for="category">
+                    📦 Category
+                </label>
+
+                <select id="category">
+
+                    <option value="Any">
+                        Any
+                    </option>
+
+                    <option value="Mobile">
+                        📱 Mobile
+                    </option>
+
+                    <option value="Laptop">
+                        💻 Laptop
+                    </option>
+
+                    <option value="TV">
+                        📺 TV
+                    </option>
+
+                    <option value="Headphones">
+                        🎧 Headphones
+                    </option>
+
+                    <option value="Camera">
+                        📷 Camera
+                    </option>
+
+                    <option value="Tablet">
+                        📱 Tablet
+                    </option>
+
+                    <option value="Smartwatch">
+                        ⌚ Smartwatch
+                    </option>
+
+                    <option value="Other">
+                        🛍️ Other
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <button
+                class="search-button"
+                id="searchButton"
+                onclick="startAgent()"
+            >
+                🚀 Let DealHunter Find It
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- AGENT STATUS -->
+    <section id="status">
+
+        <div class="status-box">
+
+            <div class="status-title">
+                🤖 DealHunter Agent
+            </div>
+
+            <div
+                id="statusContent"
+            ></div>
+
+        </div>
+
+    </section>
+
+
+    <!-- RESULTS -->
+    <section id="results">
+
+        <div class="results-heading">
+
+            <h2>
+                🛍️ DealHunter Results
+            </h2>
+
+            <p id="resultDescription">
+                Real web results found by your AI agent.
+            </p>
+
+        </div>
+
+        <div id="resultsContent"></div>
+
+    </section>
+
+
+    <!-- FOOTER -->
+    <footer>
+
+        DealHunter AI • Read • Reason • Act
+
+    </footer>
+
+
+    <script>
+
+        async function startAgent() {
+
+            const product =
+                document.getElementById("product").value.trim();
+
+            const budget =
+                document.getElementById("budget").value.trim();
+
+            const category =
+                document.getElementById("category").value;
+
+            const status =
+                document.getElementById("status");
+
+            const statusContent =
+                document.getElementById("statusContent");
+
+            const results =
+                document.getElementById("results");
+
+            const resultsContent =
+                document.getElementById("resultsContent");
+
+            const button =
+                document.getElementById("searchButton");
+
+
+            /* VALIDATION */
+
+            if (!product) {
+
+                alert("Please enter a product!");
+
+                return;
+
+            }
+
+
+            /* DISABLE BUTTON */
+
+            button.disabled = true;
+
+            button.innerHTML =
+                "⏳ DealHunter is working...";
+
+
+            /* SHOW STATUS */
+
+            status.style.display = "block";
+
+            results.style.display = "none";
+
+
+            statusContent.innerHTML = `
+
+                <div class="status-step active">
+                    🔎 Searching the web for
+                    <b>${escapeHTML(product)}</b>
+                </div>
+
+                <div class="status-step active">
+                    📖 Reading product information...
+                </div>
+
+                <div class="status-step active">
+                    🧠 Comparing prices, ratings and features...
+                </div>
+
+                <div class="status-step active">
+                    🏆 Selecting the best deal...
+                </div>
+
+            `;
+
+
+            try {
+
+                /* CALL BACKEND */
+
+                const response = await fetch(
+                    "/api/search",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body: JSON.stringify({
+
+                            product: product,
+
+                            budget: budget,
+
+                            category: category
+
+                        })
+
+                    }
+                );
+
+
+                const data =
+                    await response.json();
+
+
+                if (!response.ok ||
+                    !data.success) {
+
+                    throw new Error(
+                        data.error ||
+                        "Search failed"
+                    );
+
+                }
+
+
+                /* COMPLETED STATUS */
+
+                statusContent.innerHTML = `
+
+                    <div class="status-step completed">
+                        ✅ Web search completed
+                    </div>
+
+                    <div class="status-step completed">
+                        ✅ Product information collected
+                    </div>
+
+                    <div class="status-step completed">
+                        🧠 Products compared
+                    </div>
+
+                    <div class="status-step completed">
+                        🏆 Best matching deals selected
+                    </div>
+
+                `;
+
+
+                /* SHOW RESULTS */
+
+                displayResults(
+                    data.results || [],
+                    product
+                );
+
+
+            }
+
+            catch (error) {
+
+                console.error(error);
+
+                statusContent.innerHTML = `
+
+                    <div class="status-step error">
+                        ❌ ${escapeHTML(error.message)}
+                    </div>
+
+                `;
+
+            }
+
+
+            finally {
+
+                button.disabled = false;
+
+                button.innerHTML =
+                    "🚀 Let DealHunter Find It";
+
+            }
+
+        }
+
+
+        /* DISPLAY RESULTS */
+
+        function displayResults(
+            items,
+            searchedProduct
+        ) {
+
+            const results =
+                document.getElementById("results");
+
+            const resultsContent =
+                document.getElementById(
+                    "resultsContent"
+                );
+
+
+            results.style.display = "block";
+
+
+            if (!items ||
+                items.length === 0) {
+
+                resultsContent.innerHTML = `
+
+                    <div class="no-results">
+
+                        <h2>
+                            😕 No results found
+                        </h2>
+
+                        <p>
+                            Try a different product name
+                            or remove the budget limit.
+                        </p>
+
+                    </div>
+
+                `;
+
+                results.scrollIntoView({
+                    behavior: "smooth"
+                });
+
+                return;
+
+            }
+
+
+            /* BEST RESULT */
+
+            const best =
+                items[0];
+
+
+            let html = `
+
+                <div class="best-deal">
+
+                    <div class="best-badge">
+                        🏆 BEST MATCH
+                    </div>
+
+                    <h2>
+                        ${escapeHTML(
+                            best.title ||
+                            "Best Deal Found"
+                        )}
+                    </h2>
+
+                    <p>
+                        ${escapeHTML(
+                            best.snippet ||
+                            "DealHunter found this as the best matching result."
+                        )}
+                    </p>
+
+                    ${
+                        best.url
+                        ?
+                        `
+                        <a
+                            href="${escapeAttribute(best.url)}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="deal-button"
+                        >
+                            🛒 View Deal
+                        </a>
+                        `
+                        :
+                        ""
+                    }
+
+                </div>
+
+
+                <h2 class="results-title">
+                    🔎 More Deals
+                </h2>
+
+                <div class="product-grid">
+
+            `;
+
+
+            /* OTHER RESULTS */
+
+            items.forEach(
+                (item, index) => {
+
+                    html += `
+
+                        <div class="product-card">
+
+                            <div class="rank">
+                                #${index + 1}
+                            </div>
+
+                            <h3>
+                                ${escapeHTML(
+                                    item.title ||
+                                    "Product"
+                                )}
+                            </h3>
+
+                            <p class="snippet">
+                                ${escapeHTML(
+                                    item.snippet ||
+                                    "Product information found on the web."
+                                )}
+                            </p>
+
+                            <div class="source">
+                                🌐
+                                ${escapeHTML(
+                                    getDomain(
+                                        item.url
+                                    )
+                                )}
+                            </div>
+
+                            ${
+                                item.url
+                                ?
+                                `
+                                <a
+                                    href="${escapeAttribute(item.url)}"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="deal-button"
+                                >
+                                    🔗 Open Deal
+                                </a>
+                                `
+                                :
+                                ""
+                            }
+
+                        </div>
+
+                    `;
+
+                }
+            );
+
+
+            html += `
+
+                </div>
+
+            `;
+
+
+            resultsContent.innerHTML =
+                html;
+
+
+            results.scrollIntoView({
+                behavior: "smooth"
+            });
+
+        }
+
+
+        /* GET WEBSITE NAME */
+
+        function getDomain(url) {
+
+            if (!url) {
+
+                return "Online Store";
+
+            }
+
+
+            try {
+
+                return new URL(url)
+                    .hostname
+                    .replace("www.", "");
+
+            }
+
+            catch {
+
+                return "Online Store";
+
+            }
+
+        }
+
+
+        /* SECURITY */
+
+        function escapeHTML(text) {
+
+            const div =
+                document.createElement("div");
+
+            div.textContent =
+                text || "";
+
+            return div.innerHTML;
+
+        }
+
+
+        function escapeAttribute(url) {
+
+            return String(url)
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+
+        }
+
+    </script>
+
+</body>
+</html>
